@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.10)
+project(bspatch_android C)
+
+# bzip2 源文件
+set(BZIP2_SOURCES
+        bzip2/blocksort.c
+        bzip2/bzlib.c
+        bzip2/compress.c
+        bzip2/decompress.c
+        bzip2/crctable.c
+        bzip2/huffman.c
+        bzip2/randtable.c
+        )
+
+# 编译 bzip2 静态库
+add_library(bzip2 STATIC ${BZIP2_SOURCES})
+
+target_include_directories(bzip2 PUBLIC bzip2)
+
+# 编译 bspatch 动态库
+add_library(bspatch SHARED
+        bspatch.c
+        )
+
+target_include_directories(bspatch PRIVATE bzip2)
+
+target_link_libraries(bspatch bzip2 log)
